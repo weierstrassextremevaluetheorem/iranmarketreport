@@ -1,0 +1,2152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 Iran War — Global Economic Impact Report</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2330;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #f0883e;
+    --red: #f85149;
+    --green: #3fb950;
+    --blue: #58a6ff;
+    --yellow: #d29922;
+    --purple: #bc8cff;
+    --teal: #39d353;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #1a0a0a 0%, #2d0f0f 40%, #1c1a10 100%);
+    border-bottom: 1px solid #5c1a1a;
+    padding: 36px 48px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(248,81,73,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(240,136,62,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .header-tag {
+    display: inline-block;
+    background: rgba(248,81,73,0.15);
+    border: 1px solid rgba(248,81,73,0.4);
+    color: #f85149;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 3px;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+    background: linear-gradient(90deg, #e6edf3 0%, #f0883e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .header-meta {
+    display: flex;
+    gap: 24px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .meta-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .meta-value { font-size: 14px; font-weight: 600; color: var(--text); }
+
+  /* ALERT BANNER */
+  .alert-banner {
+    background: rgba(248,81,73,0.1);
+    border: 1px solid rgba(248,81,73,0.3);
+    border-left: 3px solid var(--red);
+    margin: 24px 48px;
+    padding: 12px 16px;
+    border-radius: 4px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: #ffa8a5;
+  }
+  .alert-icon { font-size: 16px; flex-shrink: 0; }
+
+  /* NAV TABS */
+  .nav-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .nav-tab {
+    padding: 12px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* MAIN CONTENT */
+  .main { padding: 32px 48px; max-width: 1400px; margin: 0 auto; }
+
+  .tab-section { display: none; }
+  .tab-section.active { display: block; }
+
+  /* KPI CARDS */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .kpi-card.red::before { background: var(--red); }
+  .kpi-card.green::before { background: var(--green); }
+  .kpi-card.yellow::before { background: var(--yellow); }
+  .kpi-card.blue::before { background: var(--blue); }
+  .kpi-card.purple::before { background: var(--purple); }
+  .kpi-card.orange::before { background: var(--accent); }
+
+  .kpi-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 8px; }
+  .kpi-value { font-size: 26px; font-weight: 800; margin-bottom: 4px; }
+  .kpi-value.red { color: var(--red); }
+  .kpi-value.green { color: var(--green); }
+  .kpi-value.yellow { color: var(--yellow); }
+  .kpi-value.blue { color: var(--blue); }
+  .kpi-value.purple { color: var(--purple); }
+  .kpi-value.orange { color: var(--accent); }
+  .kpi-delta { font-size: 12px; color: var(--muted); }
+  .kpi-delta .up { color: var(--red); }
+  .kpi-delta .down { color: var(--green); }
+
+  /* SECTION TITLES */
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title .icon { font-size: 20px; }
+
+  /* CHARTS */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .chart-card h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 16px;
+  }
+  .chart-container { position: relative; height: 240px; }
+
+  /* FULL WIDTH CHART */
+  .chart-card.full { grid-column: 1 / -1; }
+  .chart-card.full .chart-container { height: 280px; }
+
+  /* TABLES */
+  .table-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .table-card h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th {
+    background: var(--surface2);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(88,166,255,0.04); }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-red { background: rgba(248,81,73,0.15); color: #f85149; border: 1px solid rgba(248,81,73,0.3); }
+  .badge-green { background: rgba(63,185,80,0.15); color: #3fb950; border: 1px solid rgba(63,185,80,0.3); }
+  .badge-yellow { background: rgba(210,153,34,0.15); color: #d29922; border: 1px solid rgba(210,153,34,0.3); }
+  .badge-blue { background: rgba(88,166,255,0.15); color: #58a6ff; border: 1px solid rgba(88,166,255,0.3); }
+
+  .change-up { color: var(--red); font-weight: 600; }
+  .change-down { color: var(--green); font-weight: 600; }
+
+  /* TRICKLE FLOW */
+  .flow-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+  .flow-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+  .flow-node {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-size: 12px;
+    position: relative;
+  }
+  .flow-node.trigger { border-color: #f85149; background: rgba(248,81,73,0.08); }
+  .flow-node.level1 { border-color: #f0883e; background: rgba(240,136,62,0.08); }
+  .flow-node.level2 { border-color: #d29922; background: rgba(210,153,34,0.08); }
+  .flow-node.level3 { border-color: #58a6ff; background: rgba(88,166,255,0.08); }
+  .flow-node.level4 { border-color: #bc8cff; background: rgba(188,140,255,0.08); }
+  .flow-node-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .flow-node.trigger .flow-node-title { color: #f85149; }
+  .flow-node.level1 .flow-node-title { color: #f0883e; }
+  .flow-node.level2 .flow-node-title { color: #d29922; }
+  .flow-node.level3 .flow-node-title { color: #58a6ff; }
+  .flow-node.level4 .flow-node-title { color: #bc8cff; }
+  .flow-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 0;
+    color: var(--muted);
+    font-size: 18px;
+  }
+  .flow-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 8px;
+    padding: 4px 12px;
+    background: var(--surface2);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    display: inline-block;
+  }
+
+  /* ACTOR CARDS */
+  .actor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .actor-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+  }
+  .actor-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .actor-flag { font-size: 24px; }
+  .actor-name { font-weight: 700; font-size: 15px; }
+  .actor-type { font-size: 11px; color: var(--muted); }
+  .incentive-list { list-style: none; }
+  .incentive-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 5px 0;
+    font-size: 12px;
+    color: var(--text);
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+  }
+  .incentive-list li:last-child { border-bottom: none; }
+  .incentive-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+  .dot-green { background: var(--green); }
+  .dot-red { background: var(--red); }
+  .dot-yellow { background: var(--yellow); }
+  .dot-blue { background: var(--blue); }
+
+  /* SCENARIO TABS */
+  .scenario-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .scenario-btn {
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .scenario-btn.active, .scenario-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(240,136,62,0.1);
+  }
+  .scenario-panel { display: none; }
+  .scenario-panel.active { display: block; }
+
+  /* INFO BOXES */
+  .info-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+  }
+  .info-box.warn { border-left-color: var(--yellow); }
+  .info-box.danger { border-left-color: var(--red); }
+  .info-box strong { color: var(--text); }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 24px;
+    margin-bottom: 24px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--red), var(--yellow), var(--blue));
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+    padding-left: 20px;
+  }
+  .timeline-dot {
+    position: absolute;
+    left: -17px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+  .timeline-date {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .timeline-event {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .timeline-detail { font-size: 12px; color: var(--muted); }
+
+  /* SOURCES */
+  .sources-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 32px;
+  }
+  .sources-section h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
+  }
+  .source-link {
+    display: inline-block;
+    color: var(--blue);
+    text-decoration: none;
+    font-size: 12px;
+    margin-right: 16px;
+    margin-bottom: 6px;
+  }
+  .source-link:hover { text-decoration: underline; }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 24px 48px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 40px;
+  }
+
+  /* MAP */
+  #conflictMap { height: 100%; width: 100%; border-radius: 6px; z-index: 0; }
+  .map-wrap { height: 540px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 24px; }
+  .leaflet-container { background: #0d1117 !important; }
+  .leaflet-popup-content-wrapper { background: #1c2330; border: 1px solid #30363d; color: #e6edf3; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
+  .leaflet-popup-tip { background: #1c2330; }
+  .leaflet-popup-content { margin: 12px 16px; font-size: 13px; line-height: 1.6; }
+  .leaflet-popup-content b { color: #f0883e; font-size: 14px; }
+  .leaflet-popup-close-button { color: #8b949e !important; }
+  .map-legend { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 12px 14px; font-size: 12px; color: #8b949e; line-height: 1.8; }
+  .map-legend h4 { color: #e6edf3; font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+  .leg-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .leg-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.3); }
+  .leg-line { width: 20px; height: 3px; flex-shrink: 0; }
+  .map-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  /* Pulse animation for critical markers */
+  @keyframes pulse-ring {
+    0%   { transform: scale(0.6); opacity: 0.9; }
+    100% { transform: scale(2.4); opacity: 0; }
+  }
+  .pulse-icon { position: relative; }
+  .pulse-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.6);
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: rgba(248,81,73,0.5);
+    animation: pulse-ring 1.6s cubic-bezier(0.215,0.61,0.355,1) infinite;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .header, .main, .nav-bar { padding-left: 20px; padding-right: 20px; }
+    .chart-grid { grid-template-columns: 1fr; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-tag">⚠️ Conflict Economic Analysis</div>
+  <h1>2026 Iran War — Global Economic Impact</h1>
+  <div class="subtitle">Comprehensive cost analysis, commodity impacts & market implications · Updated March 11, 2026</div>
+  <div class="header-meta">
+    <div class="meta-item"><span class="meta-label">Conflict Start</span><span class="meta-value">Feb 28, 2026</span></div>
+    <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value" style="color:#f85149">Active</span></div>
+    <div class="meta-item"><span class="meta-label">Operation</span><span class="meta-value">Operation Epic Fury</span></div>
+    <div class="meta-item"><span class="meta-label">Parties</span><span class="meta-value">US · Israel vs. Iran</span></div>
+    <div class="meta-item"><span class="meta-label">Report Date</span><span class="meta-value">March 11, 2026</span></div>
+  </div>
+</div>
+
+<!-- ALERT -->
+<div class="alert-banner">
+  <span class="alert-icon">🔴</span>
+  <span><strong>Critical Situation Active:</strong> The Strait of Hormuz remains effectively closed, trapping ~20M barrels/day of oil. Qatar has declared force majeure on LNG exports. Saudi Aramco's Ras Tanura terminal is offline. Global supply chains are in acute disruption.</span>
+</div>
+
+<!-- NAV -->
+<div class="nav-bar">
+  <div class="nav-tab active" onclick="switchTab('overview')">Overview</div>
+  <div class="nav-tab" onclick="switchTab('energy')">⛽ Energy Markets</div>
+  <div class="nav-tab" onclick="switchTab('commodities')">📦 Commodities</div>
+  <div class="nav-tab" onclick="switchTab('trickle')">🔗 Trickle Effects</div>
+  <div class="nav-tab" onclick="switchTab('markets')">📈 Stock Markets</div>
+  <div class="nav-tab" onclick="switchTab('actors')">🌍 Actor Incentives</div>
+  <div class="nav-tab" onclick="switchTab('scenarios')">🔮 Scenarios</div>
+  <div class="nav-tab" onclick="switchTab('map')">🗺️ Live Map</div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- ===== OVERVIEW TAB ===== -->
+  <div id="tab-overview" class="tab-section active">
+
+    <div class="kpi-grid">
+      <div class="kpi-card red">
+        <div class="kpi-label">Brent Crude (Peak)</div>
+        <div class="kpi-value red">$119.50</div>
+        <div class="kpi-delta">Current: $87.80 · <span class="up">+27% from pre-war</span></div>
+      </div>
+      <div class="kpi-card orange">
+        <div class="kpi-label">WTI Crude (Peak)</div>
+        <div class="kpi-value orange">$101.97</div>
+        <div class="kpi-delta">Pre-war: ~$70 · <span class="up">+36% in 1 week</span></div>
+      </div>
+      <div class="kpi-card yellow">
+        <div class="kpi-label">EU Nat. Gas Surge</div>
+        <div class="kpi-value yellow">+20%</div>
+        <div class="kpi-delta">Qatar force majeure · 20% global LNG offline</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">KOSPI Drop (Korea)</div>
+        <div class="kpi-value red">−12%</div>
+        <div class="kpi-delta">Circuit breaker triggered Mar 4</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-label">Air Freight Spike</div>
+        <div class="kpi-value blue">+400%</div>
+        <div class="kpi-delta">48-hour surge after airspace closures</div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-label">US Gas Pump Price</div>
+        <div class="kpi-value purple">$3.45</div>
+        <div class="kpi-delta">From $3.00 pre-war · <span class="up">+15%</span></div>
+      </div>
+    </div>
+
+    <div class="section-title"><span class="icon">📅</span> Conflict Timeline</div>
+    <div class="flow-container">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:#f85149"></div>
+          <div class="timeline-date">Feb 28, 2026</div>
+          <div class="timeline-event">Operation Epic Fury Launched</div>
+          <div class="timeline-detail">Joint US-Israeli airstrikes targeting Iranian leadership and military infrastructure. Supreme Leader Khamenei assassinated in precision decapitation strike. Oil futures spike 10–13% overnight.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:#f0883e"></div>
+          <div class="timeline-date">Mar 1–2, 2026</div>
+          <div class="timeline-event">Iran Retaliates · Gulf States Hit</div>
+          <div class="timeline-detail">Iran launches missiles and drones at US/Israeli targets and Gulf states hosting US forces. Airspace closes across UAE, Qatar, Kuwait. Dow falls 400+ points. Strait of Hormuz effectively shut down.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:#d29922"></div>
+          <div class="timeline-date">Mar 3–4, 2026</div>
+          <div class="timeline-event">Asian Markets Crash · Qatar Force Majeure</div>
+          <div class="timeline-detail">South Korea KOSPI crashes 12%, triggering circuit breaker — worst since 2008. Thai Stock Exchange curbs trading. Qatar declares force majeure on LNG exports. Ras Tanura refinery closed.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:#f0883e"></div>
+          <div class="timeline-date">Mar 5–7, 2026</div>
+          <div class="timeline-event">Supply Chain Cascade Begins</div>
+          <div class="timeline-detail">~200 ships stranded in Persian Gulf. Air freight costs up 400%. Indian pharma exports disrupted. AWS data center hit by drone shrapnel in Dubai — first cloud infrastructure war damage in history. IEA calls emergency meeting.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:#f85149"></div>
+          <div class="timeline-date">Mar 8–9, 2026</div>
+          <div class="timeline-event">Oil Tops $100 · Peak Panic</div>
+          <div class="timeline-detail">Brent hits $119.50/barrel intraday — highest in 4 years. WTI at $101.97. US gasoline at $3.45/gal. S&P 500 falls 0.94%. Analysts warn of "game-changing" energy crisis.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:#3fb950"></div>
+          <div class="timeline-date">Mar 10–11, 2026</div>
+          <div class="timeline-event">Oil Retreats on Trump Comments</div>
+          <div class="timeline-detail">Trump states war will end "very soon." WTI falls 11.94% to $83.45; Brent loses 11.28% to $87.80. Markets partially recover. Strait of Hormuz still closed. Structural damage remains unassessed.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card full">
+        <h3>Oil Price Trajectory — Brent Crude (Feb 27 – Mar 11, 2026)</h3>
+        <div class="chart-container">
+          <canvas id="oilTimelineChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== ENERGY MARKETS TAB ===== -->
+  <div id="tab-energy" class="tab-section">
+    <div class="section-title"><span class="icon">⛽</span> Energy Market Disruption</div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card red">
+        <div class="kpi-label">Oil Thru Hormuz/Day</div>
+        <div class="kpi-value red">20M bbl</div>
+        <div class="kpi-delta">~20% of global daily supply — currently blocked</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">LNG Offline</div>
+        <div class="kpi-value red">~20%</div>
+        <div class="kpi-delta">Qatar force majeure · 1+ month to normalize</div>
+      </div>
+      <div class="kpi-card orange">
+        <div class="kpi-label">Barrels Stranded</div>
+        <div class="kpi-value orange">140M</div>
+        <div class="kpi-delta">Suspended from SA, UAE, Iraq, Kuwait</div>
+      </div>
+      <div class="kpi-card yellow">
+        <div class="kpi-label">Inflation Add</div>
+        <div class="kpi-value yellow">+0.8%</div>
+        <div class="kpi-delta">Global CPI impact if $100+ sustained</div>
+      </div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Crude Oil Price Range (Brent)</h3>
+        <div class="chart-container">
+          <canvas id="oilRangeChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Global Oil Supply Disruption — Share</h3>
+        <div class="chart-container">
+          <canvas id="supplyDisruptionChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <h3>Energy Infrastructure Status</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Asset / Route</th>
+            <th>Country</th>
+            <th>Capacity</th>
+            <th>Status</th>
+            <th>Impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Strait of Hormuz</strong></td>
+            <td>Iran/Oman</td>
+            <td>20M bbl/day + 20% LNG</td>
+            <td><span class="badge badge-red">CLOSED</span></td>
+            <td class="change-up">Catastrophic — all Gulf exports blocked</td>
+          </tr>
+          <tr>
+            <td><strong>Ras Tanura Refinery</strong></td>
+            <td>Saudi Arabia</td>
+            <td>World's largest export terminal</td>
+            <td><span class="badge badge-red">OFFLINE</span></td>
+            <td class="change-up">Saudi exports suspended</td>
+          </tr>
+          <tr>
+            <td><strong>Qatar LNG Export</strong></td>
+            <td>Qatar</td>
+            <td>20% global LNG supply</td>
+            <td><span class="badge badge-red">Force Majeure</span></td>
+            <td class="change-up">EU gas +20%, Pakistan critical</td>
+          </tr>
+          <tr>
+            <td><strong>Dubai Airspace</strong></td>
+            <td>UAE</td>
+            <td>~90M passengers/year hub</td>
+            <td><span class="badge badge-yellow">RESTRICTED</span></td>
+            <td class="change-up">Air freight +400%, gold routes disrupted</td>
+          </tr>
+          <tr>
+            <td><strong>Hormuz Pipeline (UAE)</strong></td>
+            <td>UAE</td>
+            <td>1.5M bbl/day bypass</td>
+            <td><span class="badge badge-yellow">LIMITED</span></td>
+            <td class="change-up">Partial relief only, insufficient</td>
+          </tr>
+          <tr>
+            <td><strong>North Sea / Norway</strong></td>
+            <td>Norway</td>
+            <td>1.7M bbl/day</td>
+            <td><span class="badge badge-green">NORMAL</span></td>
+            <td class="change-down">Windfall revenue at $100+ prices</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-box warn">
+      <strong>⚠️ Central Bank Dilemma:</strong> The Iran crisis forces a stagflation-style bind. Higher energy prices fuel inflation AND suppress growth. The Fed faces competing pressures: a weakening job market argues for rate cuts, while inflation above 2% target argues for hikes. ECB, BoE, and BoJ face similar paradoxes.
+    </div>
+
+  </div>
+
+  <!-- ===== COMMODITIES TAB ===== -->
+  <div id="tab-commodities" class="tab-section">
+    <div class="section-title"><span class="icon">📦</span> Commodity Price Impacts</div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Commodity % Change Since Feb 27</h3>
+        <div class="chart-container">
+          <canvas id="commodityChangeChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Safe-Haven vs. Risk Asset Performance</h3>
+        <div class="chart-container">
+          <canvas id="safeHavenChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <h3>Commodity Impact Matrix</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Commodity</th>
+            <th>Pre-War</th>
+            <th>Peak</th>
+            <th>Current Est.</th>
+            <th>Change</th>
+            <th>Primary Driver</th>
+            <th>Risk Level</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Brent Crude</strong></td>
+            <td>~$72.87/bbl</td>
+            <td>$119.50/bbl</td>
+            <td>$87.80/bbl</td>
+            <td class="change-up">+20.5%</td>
+            <td>Hormuz closure, Ras Tanura offline</td>
+            <td><span class="badge badge-red">Critical</span></td>
+          </tr>
+          <tr>
+            <td><strong>WTI Crude</strong></td>
+            <td>~$70/bbl</td>
+            <td>$101.97/bbl</td>
+            <td>$83.45/bbl</td>
+            <td class="change-up">+19.2%</td>
+            <td>Hormuz closure, global demand shock</td>
+            <td><span class="badge badge-red">Critical</span></td>
+          </tr>
+          <tr>
+            <td><strong>EU Natural Gas</strong></td>
+            <td>Baseline</td>
+            <td>+20%</td>
+            <td>+15–20%</td>
+            <td class="change-up">+20%</td>
+            <td>Qatar force majeure · LNG rerouting</td>
+            <td><span class="badge badge-red">Critical</span></td>
+          </tr>
+          <tr>
+            <td><strong>Gold</strong></td>
+            <td>Safe-haven base</td>
+            <td>Multi-year high</td>
+            <td>Elevated</td>
+            <td class="change-up">+4–8% est.</td>
+            <td>Geopolitical safe-haven demand</td>
+            <td><span class="badge badge-yellow">Elevated</span></td>
+          </tr>
+          <tr>
+            <td><strong>Nitrogen Fertilizer</strong></td>
+            <td>Stable</td>
+            <td>Rising</td>
+            <td>Rising</td>
+            <td class="change-up">+10–15% projected</td>
+            <td>Hormuz blocks fertilizer exports</td>
+            <td><span class="badge badge-red">High</span></td>
+          </tr>
+          <tr>
+            <td><strong>Wheat / Grain</strong></td>
+            <td>Stable</td>
+            <td>Early pressure</td>
+            <td>Rising</td>
+            <td class="change-up">+5–12% projected</td>
+            <td>Energy/fertilizer cost pass-through</td>
+            <td><span class="badge badge-yellow">High</span></td>
+          </tr>
+          <tr>
+            <td><strong>US Gasoline</strong></td>
+            <td>$3.00/gal</td>
+            <td>$3.45/gal</td>
+            <td>$3.45–3.80/gal</td>
+            <td class="change-up">+15–27%</td>
+            <td>Crude oil pass-through, refining margins</td>
+            <td><span class="badge badge-red">High</span></td>
+          </tr>
+          <tr>
+            <td><strong>Indian Pharma Inputs</strong></td>
+            <td>Normal</td>
+            <td>Severely disrupted</td>
+            <td>Disrupted</td>
+            <td class="change-up">Supply shock</td>
+            <td>Air freight +400%, transit route closure</td>
+            <td><span class="badge badge-red">High</span></td>
+          </tr>
+          <tr>
+            <td><strong>USD Index</strong></td>
+            <td>Baseline</td>
+            <td>Stronger</td>
+            <td>+2–4%</td>
+            <td class="change-down">USD gains</td>
+            <td>Safe-haven capital flows to USD</td>
+            <td><span class="badge badge-green">Moderate</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-box danger">
+      <strong>🌾 Food Price Warning:</strong> The Strait of Hormuz blockage threatens nitrogen fertilizer exports ahead of the Northern Hemisphere spring planting season. Prolonged disruption could trigger shortages in South Asia and Latin America, causing crop yield drops for late 2026 and food price spikes affecting hundreds of millions.
+    </div>
+
+  </div>
+
+  <!-- ===== TRICKLE EFFECTS TAB ===== -->
+  <div id="tab-trickle" class="tab-section">
+    <div class="section-title"><span class="icon">🔗</span> Trickle-Down Effect Map</div>
+
+    <div class="flow-container">
+
+      <div style="text-align:center; margin-bottom:20px">
+        <span class="flow-label">TRIGGER EVENT</span>
+      </div>
+      <div class="flow-row" style="justify-content:center">
+        <div class="flow-node trigger" style="max-width:600px">
+          <div class="flow-node-title">🚀 US-Israeli Airstrikes on Iran (Feb 28)</div>
+          Joint military operation targets Iranian leadership · Iran retaliates with missiles &amp; drones on Gulf states
+        </div>
+      </div>
+
+      <div class="flow-connector">↓</div>
+      <div style="text-align:center; margin-bottom:10px"><span class="flow-label">LEVEL 1 — DIRECT PHYSICAL IMPACTS</span></div>
+      <div class="flow-row">
+        <div class="flow-node level1">
+          <div class="flow-node-title">🚢 Strait of Hormuz Closure</div>
+          20M bbl/day oil + 20% global LNG blocked. 200 ships stranded. 140M barrels suspended.
+        </div>
+        <div class="flow-node level1">
+          <div class="flow-node-title">✈️ Gulf Airspace Shutdown</div>
+          UAE, Qatar, Kuwait, others close airspace. Emirates, major carriers grounded. Dubai Airport disrupted.
+        </div>
+        <div class="flow-node level1">
+          <div class="flow-node-title">🏭 Infrastructure Damage</div>
+          Ras Tanura (Saudi) offline. Qatar LNG force majeure. AWS data center hit in Dubai — 1st ever cloud war damage.
+        </div>
+      </div>
+
+      <div class="flow-connector">↓</div>
+      <div style="text-align:center; margin-bottom:10px"><span class="flow-label">LEVEL 2 — ENERGY & COMMODITY SHOCK</span></div>
+      <div class="flow-row">
+        <div class="flow-node level2">
+          <div class="flow-node-title">🛢️ Oil +27–64%</div>
+          Brent: $73 → $119.50 peak, settling ~$87.80. WTI $70 → $101.97 peak.
+        </div>
+        <div class="flow-node level2">
+          <div class="flow-node-title">🔥 Gas +20%+ EU</div>
+          European TTF gas surges. LNG rerouting adds weeks of shipping time &amp; cost.
+        </div>
+        <div class="flow-node level2">
+          <div class="flow-node-title">✈️ Air Freight +400%</div>
+          Alternative cargo routes overwhelmed. 48-hour spike. India pharma exports paralyzed.
+        </div>
+        <div class="flow-node level2">
+          <div class="flow-node-title">🥇 Gold Safe-Haven Bid</div>
+          Gold rises on geopolitical fear. Dubai airspace disruptions cause gold price swings in India.
+        </div>
+      </div>
+
+      <div class="flow-connector">↓</div>
+      <div style="text-align:center; margin-bottom:10px"><span class="flow-label">LEVEL 3 — SUPPLY CHAIN & INFLATION CASCADES</span></div>
+      <div class="flow-row">
+        <div class="flow-node level3">
+          <div class="flow-node-title">⛽ Gasoline $3.00→$3.45+</div>
+          US pump prices up 15%. Europe petrol up 20%+. Transport, logistics, agriculture all repriced.
+        </div>
+        <div class="flow-node level3">
+          <div class="flow-node-title">🌾 Fertilizer Crunch</div>
+          Nitrogen fertilizer blocked from Hormuz ahead of NH spring planting. SA/LA crop yield risk for H2 2026.
+        </div>
+        <div class="flow-node level3">
+          <div class="flow-node-title">🛒 Food Price Inflation</div>
+          Energy → fertilizer → crop production costs all rise. Food Policy Institute warns of sustained price hikes.
+        </div>
+        <div class="flow-node level3">
+          <div class="flow-node-title">🏭 Manufacturing Cost Rise</div>
+          Oil-dependent factories (plastics, chemicals, auto) face input cost surge. Margin compression begins.
+        </div>
+      </div>
+
+      <div class="flow-connector">↓</div>
+      <div style="text-align:center; margin-bottom:10px"><span class="flow-label">LEVEL 4 — MACRO & FINANCIAL SYSTEM IMPACTS</span></div>
+      <div class="flow-row">
+        <div class="flow-node level4">
+          <div class="flow-node-title">📈 Global CPI +0.8%</div>
+          Analysts project 0.8% added global inflation if $100+ oil sustained for 3+ months. Stagflation risk.
+        </div>
+        <div class="flow-node level4">
+          <div class="flow-node-title">🏦 Central Bank Bind</div>
+          Fed, ECB, BoJ caught between hiking for inflation and cutting for weak growth. Policy paralysis risk.
+        </div>
+        <div class="flow-node level4">
+          <div class="flow-node-title">📉 Equity Market Stress</div>
+          KOSPI −12%, Thai bourse −8%, Dow −400pts. Airlines, auto, consumer sectors repriced.
+        </div>
+        <div class="flow-node level4">
+          <div class="flow-node-title">🇵🇰 Emerging Market Crisis</div>
+          Pakistan (40% energy imported, 100% LNG from Qatar) faces acute energy security crisis. EM currencies under pressure.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-title"><span class="icon">🌍</span> Country-Level Impact Assessment</div>
+    <div class="table-card">
+      <h3>Winners vs. Losers Matrix</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Country / Region</th>
+            <th>Position</th>
+            <th>Primary Channel</th>
+            <th>Severity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>🇵🇰 <strong>Pakistan</strong></td>
+            <td><span class="badge badge-red">Severe Loser</span></td>
+            <td>40% energy imported; 100% LNG from Qatar — now cut off</td>
+            <td class="change-up">Existential risk to energy supply</td>
+          </tr>
+          <tr>
+            <td>🇰🇷 <strong>South Korea</strong></td>
+            <td><span class="badge badge-red">Major Loser</span></td>
+            <td>Oil importer; KOSPI −12%; auto/electronics supply chain disrupted</td>
+            <td class="change-up">Stock market crash + energy cost surge</td>
+          </tr>
+          <tr>
+            <td>🇯🇵 <strong>Japan</strong></td>
+            <td><span class="badge badge-red">Major Loser</span></td>
+            <td>~90% energy import dependent; LNG heavily from Qatar</td>
+            <td class="change-up">GDP contraction risk if prolonged</td>
+          </tr>
+          <tr>
+            <td>🇮🇳 <strong>India</strong></td>
+            <td><span class="badge badge-red">Loser</span></td>
+            <td>Oil imports + pharma supply chain disrupted; gold price volatility</td>
+            <td class="change-up">Forex pressure + supply chain hit</td>
+          </tr>
+          <tr>
+            <td>🇨🇳 <strong>China</strong></td>
+            <td><span class="badge badge-red">Loser</span></td>
+            <td>Large Gulf oil importer; manufacturing cost inflation</td>
+            <td class="change-up">Moderate-high; has strategic reserves</td>
+          </tr>
+          <tr>
+            <td>🌍 <strong>Europe</strong></td>
+            <td><span class="badge badge-red">Loser</span></td>
+            <td>Gas prices +20%+; still reliant on LNG after Russia exit; inflation re-ignites</td>
+            <td class="change-up">Moderate; ECB policy bind</td>
+          </tr>
+          <tr>
+            <td>🇺🇸 <strong>United States</strong></td>
+            <td><span class="badge badge-yellow">Mixed</span></td>
+            <td>Gasoline +15%; inflation pressure; but US shale benefits from price surge</td>
+            <td>Political risk ahead of midterms</td>
+          </tr>
+          <tr>
+            <td>🇳🇴 <strong>Norway</strong></td>
+            <td><span class="badge badge-green">Winner</span></td>
+            <td>North Sea oil/gas exports at windfall prices; sovereign fund boost</td>
+            <td class="change-down">Significant windfall revenue</td>
+          </tr>
+          <tr>
+            <td>🇷🇺 <strong>Russia</strong></td>
+            <td><span class="badge badge-green">Winner</span></td>
+            <td>Oil at $100+ despite sanctions; gas exports to willing buyers repriced</td>
+            <td class="change-down">Major revenue boost; geopolitical leverage</td>
+          </tr>
+          <tr>
+            <td>🇨🇦 <strong>Canada</strong></td>
+            <td><span class="badge badge-green">Winner</span></td>
+            <td>Oil sands production profitable at $80+/bbl; LNG Canada gains interest</td>
+            <td class="change-down">Positive; Alberta windfall</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ===== STOCK MARKETS TAB ===== -->
+  <div id="tab-markets" class="tab-section">
+    <div class="section-title"><span class="icon">📈</span> Global Stock Market Impact</div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card red">
+        <div class="kpi-label">KOSPI (Korea)</div>
+        <div class="kpi-value red">−12%</div>
+        <div class="kpi-delta">Single-day crash Mar 4 · Circuit breaker triggered</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">Thai SET</div>
+        <div class="kpi-value red">−8%</div>
+        <div class="kpi-delta">Trading curb imposed</div>
+      </div>
+      <div class="kpi-card yellow">
+        <div class="kpi-label">Dow Jones Drop</div>
+        <div class="kpi-value yellow">−400 pts</div>
+        <div class="kpi-delta">Initial March 2 reaction</div>
+      </div>
+      <div class="kpi-card yellow">
+        <div class="kpi-label">S&P 500</div>
+        <div class="kpi-value yellow">−0.94%</div>
+        <div class="kpi-delta">Relative resilience vs. Asian markets</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">Airlines (US)</div>
+        <div class="kpi-value red">−2 to −4%</div>
+        <div class="kpi-delta">AAL −4.2%, DAL −2.2%, UAL −2.9%</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Energy Sector</div>
+        <div class="kpi-value green">+8–15%</div>
+        <div class="kpi-delta">US shale, integrated oils benefit</div>
+      </div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Equity Index Performance (Indexed to Feb 27 = 100)</h3>
+        <div class="chart-container">
+          <canvas id="equityPerformanceChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>S&P 500 Sector Winners vs. Losers (%)</h3>
+        <div class="chart-container">
+          <canvas id="sectorChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title"><span class="icon">📊</span> Historical Context & Investor Playbook</div>
+
+    <div class="table-card">
+      <h3>Historical Pattern: S&P 500 Returns Around Major Geopolitical Events</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>1-Month Return</th>
+            <th>6-Month Return</th>
+            <th>12-Month Return</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Gulf War I (1990–91)</td>
+            <td class="change-up">−5.2%</td>
+            <td class="change-down">+16.8%</td>
+            <td class="change-down">+25.4%</td>
+          </tr>
+          <tr>
+            <td>9/11 Attacks (2001)</td>
+            <td class="change-up">−11.6%</td>
+            <td class="change-up">−12.3%</td>
+            <td class="change-up">−14.0%</td>
+          </tr>
+          <tr>
+            <td>Iraq War Invasion (2003)</td>
+            <td class="change-down">+3.5%</td>
+            <td class="change-down">+19.6%</td>
+            <td class="change-down">+33.7%</td>
+          </tr>
+          <tr>
+            <td>Russia-Ukraine (2022)</td>
+            <td class="change-up">−3.1%</td>
+            <td class="change-up">−8.7%</td>
+            <td class="change-up">−19.1%</td>
+          </tr>
+          <tr>
+            <td><strong>Average (all major wars)</strong></td>
+            <td class="change-up"><strong>−0.9%</strong></td>
+            <td class="change-down"><strong>+3.4%</strong></td>
+            <td class="change-down"><strong>+7.5%</strong></td>
+          </tr>
+          <tr style="background:rgba(88,166,255,0.05)">
+            <td><strong>2026 Iran War (so far)</strong></td>
+            <td class="change-up"><strong>−2 to −4% est.</strong></td>
+            <td>TBD</td>
+            <td>TBD</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-box">
+      <strong>💡 Analyst View (Charles Schwab / Motley Fool):</strong> Investors had largely anticipated US military action against Iran, limiting the shock factor. The S&P 500's mega-cap tech concentration — benefiting from AI tailwinds — has buffered broader declines. Historical averages suggest recovery within 6 months, <em>if the conflict remains contained.</em> The critical variable is whether the Strait of Hormuz re-opens within weeks.
+    </div>
+
+    <div class="table-card">
+      <h3>Stock Market Impact by Sector</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Sector</th>
+            <th>Direction</th>
+            <th>Estimated Impact</th>
+            <th>Key Stocks Affected</th>
+            <th>Rationale</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Energy / Oil &amp; Gas</strong></td>
+            <td><span class="badge badge-green">↑ Strong Winner</span></td>
+            <td class="change-down">+8 to +20%</td>
+            <td>XOM, CVX, COP, SLB</td>
+            <td>Oil at $80–100+; E&amp;P margins surge</td>
+          </tr>
+          <tr>
+            <td><strong>Defense</strong></td>
+            <td><span class="badge badge-green">↑ Winner</span></td>
+            <td class="change-down">+5 to +12%</td>
+            <td>LMT, RTX, NOC, GD</td>
+            <td>Conflict escalation drives orders &amp; budgets</td>
+          </tr>
+          <tr>
+            <td><strong>Gold / Precious Metals</strong></td>
+            <td><span class="badge badge-green">↑ Winner</span></td>
+            <td class="change-down">+4 to +8%</td>
+            <td>GLD, NEM, GOLD, AEM</td>
+            <td>Safe-haven demand; USD-gold flight</td>
+          </tr>
+          <tr>
+            <td><strong>Airlines</strong></td>
+            <td><span class="badge badge-red">↓ Major Loser</span></td>
+            <td class="change-up">−3 to −8%</td>
+            <td>AAL −4.2%, DAL −2.2%, UAL −2.9%</td>
+            <td>Fuel cost +15–30%; Gulf route closures</td>
+          </tr>
+          <tr>
+            <td><strong>Consumer Discretionary</strong></td>
+            <td><span class="badge badge-red">↓ Loser</span></td>
+            <td class="change-up">−2 to −5%</td>
+            <td>AMZN, TGT, HD</td>
+            <td>Higher gas eats disposable income</td>
+          </tr>
+          <tr>
+            <td><strong>Chemicals / Fertilizers</strong></td>
+            <td><span class="badge badge-yellow">↑↓ Mixed</span></td>
+            <td>±3 to +8%</td>
+            <td>CF, MOS, NTR</td>
+            <td>Supply disruption could push prices up</td>
+          </tr>
+          <tr>
+            <td><strong>Shipping / Logistics</strong></td>
+            <td><span class="badge badge-green">↑ Winner</span></td>
+            <td class="change-down">+5 to +15%</td>
+            <td>ZIM, MATX, EXPD</td>
+            <td>Rerouting demand + rate spike</td>
+          </tr>
+          <tr>
+            <td><strong>Technology (US Mega-cap)</strong></td>
+            <td><span class="badge badge-yellow">~ Resilient</span></td>
+            <td>−1 to +2%</td>
+            <td>AAPL, MSFT, NVDA</td>
+            <td>AI tailwinds offset; cloud infra risk noted</td>
+          </tr>
+          <tr>
+            <td><strong>Utilities</strong></td>
+            <td><span class="badge badge-yellow">↑ Mild Benefit</span></td>
+            <td class="change-down">+1 to +4%</td>
+            <td>NEE, DUK, AEP</td>
+            <td>Defensive rotation; nat gas rate pass-through</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== ACTOR INCENTIVES TAB ===== -->
+  <div id="tab-actors" class="tab-section">
+    <div class="section-title"><span class="icon">🎭</span> Investor, Country &amp; Actor Incentives</div>
+
+    <div class="actor-grid">
+      <div class="actor-card">
+        <div class="actor-header">
+          <span class="actor-flag">🇺🇸</span>
+          <div><div class="actor-name">United States</div><div class="actor-type">Military Aggressor / Superpower</div></div>
+        </div>
+        <ul class="incentive-list">
+          <li><span class="incentive-dot dot-green"></span>Eliminate Iran nuclear program and regional influence</li>
+          <li><span class="incentive-dot dot-green"></span>Signal deterrence to China/Russia via decisive action</li>
+          <li><span class="incentive-dot dot-green"></span>Benefit US shale industry from $100+ oil windfall</li>
+          <li><span class="incentive-dot dot-red"></span>Gasoline spike is political liability ahead of midterms</li>
+          <li><span class="incentive-dot dot-red"></span>Fed inflation bind complicates monetary policy</li>
+          <li><span class="incentive-dot dot-yellow"></span>Needs quick end — Trump repeatedly states "over very soon"</li>
+        </ul>
+      </div>
+
+      <div class="actor-card">
+        <div class="actor-header">
+          <span class="actor-flag">🇮🇱</span>
+          <div><div class="actor-name">Israel</div><div class="actor-type">Military Aggressor / Partner</div></div>
+        </div>
+        <ul class="incentive-list">
+          <li><span class="incentive-dot dot-green"></span>Neutralize Iranian nuclear program permanently</li>
+          <li><span class="incentive-dot dot-green"></span>Eliminate IRGC leadership and proxy network (Hezbollah, Hamas supply chain)</li>
+          <li><span class="incentive-dot dot-green"></span>Normalize Gulf relations post-conflict (Saudi normalization opportunity)</li>
+          <li><span class="incentive-dot dot-red"></span>Risk of Iranian retaliation on Israeli cities</li>
+          <li><span class="incentive-dot dot-red"></span>Regional destabilization could undermine long-term security</li>
+        </ul>
+      </div>
+
+      <div class="actor-card">
+        <div class="actor-header">
+          <span class="actor-flag">🇮🇷</span>
+          <div><div class="actor-name">Iran</div><div class="actor-type">Defender / Retaliator</div></div>
+        </div>
+        <ul class="incentive-list">
+          <li><span class="incentive-dot dot-green"></span>Demonstrate that Hormuz can be weaponized — leverage over global economy</li>
+          <li><span class="incentive-dot dot-green"></span>Rally domestic support against foreign invasion</li>
+          <li><span class="incentive-dot dot-red"></span>Leadership decapitated — state coherence at risk</li>
+          <li><span class="incentive-dot dot-red"></span>Economy already under 40%+ inflation before war</li>
+          <li><span class="incentive-dot dot-yellow"></span>Incentive to negotiate ceasefire if leadership vacuum grows</li>
+        </ul>
+      </div>
+
+      <div class="actor-card">
+        <div class="actor-header">
+          <span class="actor-flag">🇷🇺</span>
+          <div><div class="actor-name">Russia</div><div class="actor-type">Opportunistic Beneficiary</div></div>
+        </div>
+        <ul class="incentive-list">
+          <li><span class="incentive-dot dot-green"></span>Oil at $100+ fills war chest despite sanctions</li>
+          <li><span class="incentive-dot dot-green"></span>US distracted from Ukraine — weakened Western focus</li>
+          <li><span class="incentive-dot dot-green"></span>Energy leverage over Europe re-ignited</li>
+          <li><span class="incentive-dot dot-yellow"></span>Risk: conflict spillover destabilizes Caspian/Central Asia</li>
+        </ul>
+      </div>
+
+      <div class="actor-card">
+        <div class="actor-header">
+          <span class="actor-flag">🇸🇦</span>
+          <div><div class="actor-name">Saudi Arabia</div><div class="actor-type">Ambivalent Actor</div></div>
+        </div>
+        <ul class="incentive-list">
+          <li><span class="incentive-dot dot-green"></span>Long-term elimination of Iranian regional threat</li>
+          <li><span class="incentive-dot dot-red"></span>Ras Tanura terminal offline — massive revenue loss</li>
+          <li><span class="incentive-dot dot-red"></span>Drone/missile attacks on Saudi infrastructure ongoing</li>
+          <li><span class="incentive-dot dot-yellow"></span>Post-conflict: potential $150B+ infrastructure deals with US</li>
+        </ul>
+      </div>
+
+      <div class="actor-card">
+        <div class="actor-header">
+          <span class="actor-flag">🇨🇳</span>
+          <div><div class="actor-name">China</div><div class="actor-type">Strategic Observer</div></div>
+        </div>
+        <ul class="incentive-list">
+          <li><span class="incentive-dot dot-red"></span>30%+ of oil imports from Gulf region — acute vulnerability</li>
+          <li><span class="incentive-dot dot-green"></span>Positions as peacemaker / alternative diplomatic anchor</li>
+          <li><span class="incentive-dot dot-yellow"></span>Watches Taiwan deterrence implications closely</li>
+          <li><span class="incentive-dot dot-red"></span>Manufacturing cost surge hurts export competitiveness</li>
+        </ul>
+      </div>
+
+      <div class="actor-card">
+        <div class="actor-header">
+          <span class="actor-flag">💰</span>
+          <div><div class="actor-name">Energy Investors (Long Oil)</div><div class="actor-type">Financial Actor</div></div>
+        </div>
+        <ul class="incentive-list">
+          <li><span class="incentive-dot dot-green"></span>Immediate +27–36% gain on crude positions</li>
+          <li><span class="incentive-dot dot-green"></span>Energy stocks (XOM, CVX) repriced higher</li>
+          <li><span class="incentive-dot dot-yellow"></span>Risk: sudden ceasefire collapses oil prices sharply</li>
+          <li><span class="incentive-dot dot-yellow"></span>IEA strategic reserve release threatens price ceiling</li>
+        </ul>
+      </div>
+
+      <div class="actor-card">
+        <div class="actor-header">
+          <span class="actor-flag">🛡️</span>
+          <div><div class="actor-name">Defense Contractors</div><div class="actor-type">Financial / Industrial Actor</div></div>
+        </div>
+        <ul class="incentive-list">
+          <li><span class="incentive-dot dot-green"></span>LMT, RTX, NOC see order backlogs surge</li>
+          <li><span class="incentive-dot dot-green"></span>Allied nations rush re-armament spending</li>
+          <li><span class="incentive-dot dot-green"></span>Precision munitions, air defense, cyber all in demand</li>
+          <li><span class="incentive-dot dot-yellow"></span>Supply chain constraints may limit near-term delivery</li>
+        </ul>
+      </div>
+
+      <div class="actor-card">
+        <div class="actor-header">
+          <span class="actor-flag">🐻</span>
+          <div><div class="actor-name">Short Sellers / Bear Investors</div><div class="actor-type">Financial Actor</div></div>
+        </div>
+        <ul class="incentive-list">
+          <li><span class="incentive-dot dot-green"></span>Profitable shorts on airlines, Korean/Asian equities</li>
+          <li><span class="incentive-dot dot-green"></span>Consumer discretionary shorts paying off</li>
+          <li><span class="incentive-dot dot-red"></span>US tech mega-cap resilience limits broad bear case</li>
+          <li><span class="incentive-dot dot-yellow"></span>Watch: ceasefire announcement as major short squeeze trigger</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCENARIOS TAB ===== -->
+  <div id="tab-scenarios" class="tab-section">
+    <div class="section-title"><span class="icon">🔮</span> Scenario Analysis &amp; Cost Projections</div>
+
+    <div class="scenario-tabs">
+      <button class="scenario-btn active" onclick="switchScenario('base')">Base Case</button>
+      <button class="scenario-btn" onclick="switchScenario('bull')">Bull (Quick End)</button>
+      <button class="scenario-btn" onclick="switchScenario('bear')">Bear (Escalation)</button>
+    </div>
+
+    <div id="scenario-base" class="scenario-panel active">
+      <div class="info-box">
+        <strong>📊 Base Case:</strong> Conflict lasts 4–8 weeks. Hormuz re-opens partially within 3 weeks. Ceasefire negotiated by end of Q1 2026. Oil settles $85–95/bbl. Global GDP impact: −0.3 to −0.5%.
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi-card orange"><div class="kpi-label">Oil Price Range</div><div class="kpi-value orange">$85–95</div><div class="kpi-delta">Brent per barrel, 3-month outlook</div></div>
+        <div class="kpi-card yellow"><div class="kpi-label">Global GDP Impact</div><div class="kpi-value yellow">−0.4%</div><div class="kpi-delta">2026 forecast downgrade</div></div>
+        <div class="kpi-card yellow"><div class="kpi-label">US CPI Addback</div><div class="kpi-value yellow">+0.5%</div><div class="kpi-delta">From energy pass-through</div></div>
+        <div class="kpi-card yellow"><div class="kpi-label">Hormuz Timeline</div><div class="kpi-value yellow">3–4 wks</div><div class="kpi-delta">Partial reopening</div></div>
+      </div>
+    </div>
+
+    <div id="scenario-bull" class="scenario-panel">
+      <div class="info-box" style="border-left-color:var(--green)">
+        <strong>🟢 Bull Case:</strong> Rapid ceasefire within 10–14 days. Trump deal with Iran successor government. Hormuz fully re-opens. Oil falls to $75–80/bbl. Markets recover fully within 6 weeks.
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi-card green"><div class="kpi-label">Oil Price Range</div><div class="kpi-value green">$75–80</div><div class="kpi-delta">Brent per barrel, rapid normalization</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Global GDP Impact</div><div class="kpi-value green">−0.1%</div><div class="kpi-delta">Minimal lasting damage</div></div>
+        <div class="kpi-card green"><div class="kpi-label">S&P 500</div><div class="kpi-value green">+3–5%</div><div class="kpi-delta">Relief rally post-ceasefire</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Hormuz Timeline</div><div class="kpi-value green">&lt;2 wks</div><div class="kpi-delta">Full reopening</div></div>
+      </div>
+    </div>
+
+    <div id="scenario-bear" class="scenario-panel">
+      <div class="info-box danger">
+        <strong>🔴 Bear Case:</strong> Conflict spreads to Iraq, Saudi Arabia, UAE. Hormuz closed 3+ months. Oil stays $120–150/bbl. Recession risk in Europe, Korea, Japan. Global GDP −1.5 to −2.5%. IEA reserve release insufficient.
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi-card red"><div class="kpi-label">Oil Price Range</div><div class="kpi-value red">$120–150</div><div class="kpi-delta">Brent per barrel, sustained crisis</div></div>
+        <div class="kpi-card red"><div class="kpi-label">Global GDP Impact</div><div class="kpi-value red">−2.0%</div><div class="kpi-delta">Recession in EU, Korea, Japan</div></div>
+        <div class="kpi-card red"><div class="kpi-label">Global CPI Add</div><div class="kpi-value red">+2–3%</div><div class="kpi-delta">Stagflation risk globally</div></div>
+        <div class="kpi-card red"><div class="kpi-label">Hormuz Timeline</div><div class="kpi-value red">3+ months</div><div class="kpi-delta">Closed or heavily contested</div></div>
+      </div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card full">
+        <h3>Global Economic Cost Estimates by Scenario ($B annualized)</h3>
+        <div class="chart-container">
+          <canvas id="scenarioCostChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <h3>Key Watch Variables — What to Track</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Variable</th>
+            <th>Bull Signal</th>
+            <th>Bear Signal</th>
+            <th>Current</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Strait of Hormuz Status</strong></td>
+            <td class="change-down">Reopening announced</td>
+            <td class="change-up">Mines placed / naval combat</td>
+            <td><span class="badge badge-red">CLOSED</span></td>
+          </tr>
+          <tr>
+            <td><strong>Iran Leadership Vacuum</strong></td>
+            <td class="change-down">Successor signals talks</td>
+            <td class="change-up">IRGC splinter escalates</td>
+            <td><span class="badge badge-yellow">Uncertain</span></td>
+          </tr>
+          <tr>
+            <td><strong>Saudi Ras Tanura</strong></td>
+            <td class="change-down">Reopens, exports resume</td>
+            <td class="change-up">Additional strikes</td>
+            <td><span class="badge badge-red">OFFLINE</span></td>
+          </tr>
+          <tr>
+            <td><strong>IEA Emergency Release</strong></td>
+            <td class="change-down">60M+ barrel coordinated release</td>
+            <td class="change-up">Release insufficient or delayed</td>
+            <td><span class="badge badge-yellow">Meeting held</span></td>
+          </tr>
+          <tr>
+            <td><strong>Trump Statements</strong></td>
+            <td class="change-down">"War is over" → ceasefire</td>
+            <td class="change-up">Escalation rhetoric</td>
+            <td><span class="badge badge-yellow">"Over very soon"</span></td>
+          </tr>
+          <tr>
+            <td><strong>Fed Policy</strong></td>
+            <td class="change-down">Rate cut signals growth support</td>
+            <td class="change-up">Hike or hold → stagflation trap</td>
+            <td><span class="badge badge-yellow">Divided / wait-and-see</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== MAP TAB ===== -->
+  <div id="tab-map" class="tab-section">
+    <div class="section-title"><span class="icon">🗺️</span> Global Conflict &amp; Chokepoint Heatmap</div>
+
+    <div class="map-stats-grid">
+      <div class="kpi-card red">
+        <div class="kpi-label">🔴 Active War Zone</div>
+        <div class="kpi-value red">Iran</div>
+        <div class="kpi-delta">US-Israeli strikes ongoing since Feb 28</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">🚢 Critical Chokepoint</div>
+        <div class="kpi-value red">Hormuz</div>
+        <div class="kpi-delta">20M bbl/day blocked · All Gulf exports halted</div>
+      </div>
+      <div class="kpi-card orange">
+        <div class="kpi-label">🏭 Offline Infrastructure</div>
+        <div class="kpi-value orange">3 Sites</div>
+        <div class="kpi-delta">Ras Tanura · Qatar LNG · Dubai Airspace</div>
+      </div>
+      <div class="kpi-card yellow">
+        <div class="kpi-label">⚠️ Secondary Chokepoints</div>
+        <div class="kpi-value yellow">2 At Risk</div>
+        <div class="kpi-delta">Bab el-Mandeb · Suez Canal on watch</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-label">🚢 Ships Stranded</div>
+        <div class="kpi-value blue">~200</div>
+        <div class="kpi-delta">Persian Gulf unable to pass Hormuz</div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-label">🌍 Countries Affected</div>
+        <div class="kpi-value purple">40+</div>
+        <div class="kpi-delta">Direct + indirect supply chain impact</div>
+      </div>
+    </div>
+
+    <div class="map-wrap">
+      <div id="conflictMap"></div>
+    </div>
+
+    <div class="section-title" style="margin-top:8px"><span class="icon">🚢</span> Shipping Route Disruption Detail</div>
+    <div class="table-card">
+      <h3>Chokepoint Status &amp; Bypass Options</h3>
+      <table>
+        <thead>
+          <tr><th>Chokepoint</th><th>Location</th><th>Normal Daily Flow</th><th>Status</th><th>Bypass Route</th><th>Extra Transit Days</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Strait of Hormuz</strong></td>
+            <td>Iran / Oman</td>
+            <td>20M bbl oil · 20% LNG</td>
+            <td><span class="badge badge-red">BLOCKED</span></td>
+            <td>UAE IPCO pipeline (partial) · Cape of Good Hope</td>
+            <td class="change-up">+18–25 days</td>
+          </tr>
+          <tr>
+            <td><strong>Bab el-Mandeb</strong></td>
+            <td>Yemen / Djibouti</td>
+            <td>4.8M bbl/day</td>
+            <td><span class="badge badge-yellow">AT RISK</span></td>
+            <td>Cape of Good Hope</td>
+            <td class="change-up">+12–15 days</td>
+          </tr>
+          <tr>
+            <td><strong>Suez Canal</strong></td>
+            <td>Egypt</td>
+            <td>~12% global trade</td>
+            <td><span class="badge badge-yellow">WATCH</span></td>
+            <td>Cape of Good Hope</td>
+            <td class="change-up">+7–12 days</td>
+          </tr>
+          <tr>
+            <td><strong>Malacca Strait</strong></td>
+            <td>Malaysia / Singapore</td>
+            <td>15M bbl/day</td>
+            <td><span class="badge badge-green">OPEN</span></td>
+            <td>Lombok / Sunda Strait</td>
+            <td>+2–3 days only</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SOURCES -->
+  <div class="sources-section">
+    <h3>Sources</h3>
+    <a class="source-link" href="https://en.wikipedia.org/wiki/Economic_impact_of_the_2026_Iran_war" target="_blank">Wikipedia — Economic Impact</a>
+    <a class="source-link" href="https://www.aljazeera.com/news/2026/3/8/iran-war-threatens-prolonged-impact-on-energy-markets-as-oil-prices-rise" target="_blank">Al Jazeera — Energy Markets</a>
+    <a class="source-link" href="https://www.axios.com/2026/03/08/iran-war-oil-market-barrel-cost" target="_blank">Axios — Oil Tops $100</a>
+    <a class="source-link" href="https://www.cnbc.com/2026/03/09/oil-prices-iran-war-middle-east-us-israel-strait-of-hormuz.html" target="_blank">CNBC — Oil Prices Analysis</a>
+    <a class="source-link" href="https://foreignpolicy.com/2026/03/04/iran-war-dubai-saudi-qatar-global-economy-oil-shipping-trade/" target="_blank">Foreign Policy — Gulf Economy</a>
+    <a class="source-link" href="https://www.washingtonpost.com/business/2026/03/08/iran-war-economy-air-freight/" target="_blank">Washington Post — Air Freight</a>
+    <a class="source-link" href="https://www.oxfordeconomics.com/resource/the-2026-iran-war-an-initial-take-and-implications/" target="_blank">Oxford Economics</a>
+    <a class="source-link" href="https://www.chathamhouse.org/2026/03/how-will-iran-war-affect-global-economy" target="_blank">Chatham House</a>
+    <a class="source-link" href="https://www.cnn.com/2026/03/10/business/oil-prices-fall-iran-war-intl" target="_blank">CNN Business — Oil Retreats</a>
+    <a class="source-link" href="https://www.euronews.com/business/2026/03/10/iran-war-shocks-continue-to-ripple-through-the-global-economy" target="_blank">Euronews — Ripple Effects</a>
+    <a class="source-link" href="https://fortune.com/2026/03/09/iran-war-asia-markets-nikkei-kospi-shares/" target="_blank">Fortune — Asian Markets</a>
+    <a class="source-link" href="https://www.cnbc.com/2026/03/04/iran-war-historical-stock-market-patterns.html" target="_blank">CNBC — Historical Patterns</a>
+    <a class="source-link" href="https://www.aljazeera.com/news/2026/3/10/how-will-soaring-oil-prices-caused-by-iran-war-impact-food-prices" target="_blank">Al Jazeera — Food Prices</a>
+    <a class="source-link" href="https://www.kpler.com/blog/us-iran-conflict-strait-of-hormuz-crisis-reshapes-global-oil-markets" target="_blank">Kpler — Hormuz Crisis</a>
+  </div>
+
+</div>
+
+<div class="footer">
+  Iran War Economic Impact Report · Data compiled March 11, 2026 · For informational purposes only · Not financial advice
+</div>
+
+<script>
+// ===== TAB SWITCHING =====
+function switchTab(tab) {
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  const tabs = ['overview','energy','commodities','trickle','markets','actors','scenarios','map'];
+  document.querySelectorAll('.nav-tab')[tabs.indexOf(tab)].classList.add('active');
+  // Re-render charts when switching tabs (for hidden canvas issue)
+  setTimeout(() => { Object.values(charts).forEach(c => c && c.resize && c.resize()); }, 50);
+}
+
+function switchScenario(s) {
+  document.querySelectorAll('.scenario-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('scenario-' + s).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ===== CHART DEFAULTS =====
+Chart.defaults.color = '#8b949e';
+Chart.defaults.borderColor = '#30363d';
+Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+Chart.defaults.font.size = 12;
+
+const charts = {};
+
+// ===== OIL TIMELINE CHART =====
+const oilCtx = document.getElementById('oilTimelineChart').getContext('2d');
+const oilDates = ['Feb 27','Feb 28\n(Strike)','Mar 1','Mar 2','Mar 3','Mar 4','Mar 5','Mar 6','Mar 7','Mar 8','Mar 9','Mar 10','Mar 11'];
+const brentData = [72.87, 79.5, 84.2, 88.1, 90.0, 92.3, 95.8, 98.2, 101.5, 103.47, 119.50, 95.2, 87.80];
+const wtiData   = [70.00, 76.0, 80.5, 84.0, 86.2, 88.5, 91.0, 94.0, 97.0,  101.97, 116.0, 91.0, 83.45];
+
+const gradient1 = oilCtx.createLinearGradient(0, 0, 0, 240);
+gradient1.addColorStop(0, 'rgba(248,81,73,0.3)');
+gradient1.addColorStop(1, 'rgba(248,81,73,0.02)');
+
+const gradient2 = oilCtx.createLinearGradient(0, 0, 0, 240);
+gradient2.addColorStop(0, 'rgba(240,136,62,0.2)');
+gradient2.addColorStop(1, 'rgba(240,136,62,0.02)');
+
+charts.oilTimeline = new Chart(oilCtx, {
+  type: 'line',
+  data: {
+    labels: oilDates,
+    datasets: [
+      {
+        label: 'Brent Crude ($/bbl)',
+        data: brentData,
+        borderColor: '#f85149',
+        backgroundColor: gradient1,
+        borderWidth: 2.5,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        fill: true,
+        tension: 0.3
+      },
+      {
+        label: 'WTI Crude ($/bbl)',
+        data: wtiData,
+        borderColor: '#f0883e',
+        backgroundColor: gradient2,
+        borderWidth: 2,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        fill: true,
+        tension: 0.3,
+        borderDash: [4,2]
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { intersect: false, mode: 'index' },
+    plugins: {
+      legend: { labels: { color: '#8b949e', boxWidth: 12 } },
+      tooltip: {
+        backgroundColor: '#1c2330',
+        borderColor: '#30363d',
+        borderWidth: 1,
+        callbacks: {
+          label: ctx => ` ${ctx.dataset.label}: $${ctx.raw.toFixed(2)}`
+        }
+      },
+      annotation: {}
+    },
+    scales: {
+      x: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', maxRotation: 0 } },
+      y: {
+        grid: { color: '#21262d' },
+        ticks: { color: '#8b949e', callback: v => '$' + v },
+        min: 65, max: 125
+      }
+    }
+  }
+});
+
+// ===== OIL RANGE CHART =====
+const rangeCtx = document.getElementById('oilRangeChart').getContext('2d');
+charts.oilRange = new Chart(rangeCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Pre-War\n(Feb 27)', 'Week 1\nHigh', 'Current\n(Mar 11)'],
+    datasets: [{
+      label: 'Brent Crude ($/bbl)',
+      data: [72.87, 119.50, 87.80],
+      backgroundColor: ['#3fb950', '#f85149', '#f0883e'],
+      borderRadius: 4,
+      borderSkipped: false
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' $' + ctx.raw.toFixed(2) } } },
+    scales: {
+      x: { grid: { color: '#21262d' }, ticks: { color: '#8b949e' } },
+      y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: v => '$' + v }, min: 60 }
+    }
+  }
+});
+
+// ===== SUPPLY DISRUPTION CHART =====
+const sdCtx = document.getElementById('supplyDisruptionChart').getContext('2d');
+charts.supplyDisruption = new Chart(sdCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Hormuz Oil (blocked)', 'Qatar LNG (blocked)', 'Ras Tanura (offline)', 'Remaining Global Supply'],
+    datasets: [{
+      data: [20, 5, 3, 72],
+      backgroundColor: ['#f85149', '#f0883e', '#d29922', '#21262d'],
+      borderColor: '#161b22',
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { color: '#8b949e', boxWidth: 12, padding: 12 } },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}% of global supply` } }
+    }
+  }
+});
+
+// ===== COMMODITY CHANGE CHART =====
+const commCtx = document.getElementById('commodityChangeChart').getContext('2d');
+const commColors = v => v > 0 ? 'rgba(248,81,73,0.8)' : 'rgba(63,185,80,0.8)';
+const commData = [20.5, 19.2, 20, 6, 12, 10, 15, -2, -1];
+charts.commodityChange = new Chart(commCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Brent', 'WTI', 'EU Gas', 'Gold', 'Fertilizer', 'Wheat', 'US Gasoline', 'USD Index', 'Iron Ore'],
+    datasets: [{
+      label: '% Change Since Feb 27',
+      data: commData,
+      backgroundColor: commData.map(commColors),
+      borderRadius: 4,
+      borderSkipped: false
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw > 0 ? '+' : ''}${ctx.raw}%` } } },
+    scales: {
+      x: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: v => v + '%' } },
+      y: { grid: { display: false }, ticks: { color: '#8b949e' } }
+    }
+  }
+});
+
+// ===== SAFE HAVEN CHART =====
+const shCtx = document.getElementById('safeHavenChart').getContext('2d');
+charts.safeHaven = new Chart(shCtx, {
+  type: 'radar',
+  data: {
+    labels: ['Oil (Energy)', 'Gold', 'USD', 'Defense Stocks', 'Airlines', 'Consumer Disc.', 'Tech (US)', 'EM Equities'],
+    datasets: [
+      {
+        label: 'Performance Score (+/−)',
+        data: [8, 6, 4, 7, -5, -4, -1, -6],
+        borderColor: '#f0883e',
+        backgroundColor: 'rgba(240,136,62,0.15)',
+        borderWidth: 2,
+        pointBackgroundColor: '#f0883e'
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      r: {
+        grid: { color: '#30363d' },
+        ticks: { color: '#8b949e', backdropColor: 'transparent', stepSize: 3 },
+        pointLabels: { color: '#8b949e', font: { size: 11 } },
+        min: -8, max: 10
+      }
+    }
+  }
+});
+
+// ===== EQUITY PERFORMANCE CHART =====
+const eqCtx = document.getElementById('equityPerformanceChart').getContext('2d');
+const eqDates = ['Feb 27','Mar 1','Mar 2','Mar 3','Mar 4','Mar 5','Mar 6','Mar 7','Mar 8','Mar 9','Mar 10','Mar 11'];
+charts.equity = new Chart(eqCtx, {
+  type: 'line',
+  data: {
+    labels: eqDates,
+    datasets: [
+      {
+        label: 'S&P 500',
+        data: [100, 99.2, 99.8, 99.1, 99.3, 99.0, 98.8, 99.1, 99.2, 99.1, 99.4, 99.3],
+        borderColor: '#58a6ff',
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        tension: 0.3,
+        pointRadius: 2
+      },
+      {
+        label: 'KOSPI (Korea)',
+        data: [100, 97.5, 95.0, 91.5, 88.0, 89.0, 90.0, 89.5, 89.0, 88.0, 89.5, 90.0],
+        borderColor: '#f85149',
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        tension: 0.3,
+        pointRadius: 2
+      },
+      {
+        label: 'Energy Sector ETF',
+        data: [100, 108, 111, 115, 118, 120, 122, 125, 130, 135, 125, 120],
+        borderColor: '#3fb950',
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        tension: 0.3,
+        pointRadius: 2
+      },
+      {
+        label: 'Airlines Index',
+        data: [100, 97, 96, 95, 94, 94.5, 95, 94, 93.5, 93, 94, 95],
+        borderColor: '#f0883e',
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        tension: 0.3,
+        pointRadius: 2,
+        borderDash: [4,2]
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { labels: { color: '#8b949e', boxWidth: 12 } },
+      tooltip: { backgroundColor: '#1c2330', borderColor: '#30363d', borderWidth: 1 }
+    },
+    scales: {
+      x: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', maxRotation: 45 } },
+      y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: v => v.toFixed(0) }, min: 85, max: 140 }
+    }
+  }
+});
+
+// ===== SECTOR CHART =====
+const secCtx = document.getElementById('sectorChart').getContext('2d');
+const secData = [15, 10, 7, -4, -3.5, -3, 3, 2, -2, -1];
+charts.sector = new Chart(secCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Energy', 'Defense', 'Shipping', 'Airlines', 'Cons.Disc', 'EM Equities', 'Utilities', 'Gold/Metals', 'Tech', 'Materials'],
+    datasets: [{
+      label: 'Est. % Change',
+      data: secData,
+      backgroundColor: secData.map(v => v > 0 ? 'rgba(63,185,80,0.8)' : 'rgba(248,81,73,0.8)'),
+      borderRadius: 4
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw > 0 ? '+' : ''}${ctx.raw}%` } } },
+    scales: {
+      x: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: v => v + '%' } },
+      y: { grid: { display: false }, ticks: { color: '#8b949e' } }
+    }
+  }
+});
+
+// ===== SCENARIO COST CHART =====
+const scCtx = document.getElementById('scenarioCostChart').getContext('2d');
+charts.scenarioCost = new Chart(scCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Global GDP Loss', 'Energy Cost Surge', 'Trade Disruption', 'Inflation Cost (households)', 'Food Price Impact', 'Financial Market Loss'],
+    datasets: [
+      {
+        label: 'Bull (Quick End)',
+        data: [150, 200, 80, 120, 40, 300],
+        backgroundColor: 'rgba(63,185,80,0.7)',
+        borderRadius: 3
+      },
+      {
+        label: 'Base Case (4–8 weeks)',
+        data: [500, 800, 300, 450, 200, 900],
+        backgroundColor: 'rgba(240,136,62,0.7)',
+        borderRadius: 3
+      },
+      {
+        label: 'Bear (Escalation 3+ months)',
+        data: [2000, 3500, 1200, 1800, 800, 3000],
+        backgroundColor: 'rgba(248,81,73,0.7)',
+        borderRadius: 3
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { labels: { color: '#8b949e', boxWidth: 12 } },
+      tooltip: { backgroundColor: '#1c2330', borderColor: '#30363d', borderWidth: 1, callbacks: { label: ctx => ` ${ctx.dataset.label}: $${ctx.raw}B` } }
+    },
+    scales: {
+      x: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', maxRotation: 30 } },
+      y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: v => '$' + v + 'B' } }
+    }
+  }
+});
+
+// ===== MAP INITIALIZATION =====
+let mapInitialized = false;
+
+function initMap() {
+  if (mapInitialized) return;
+  mapInitialized = true;
+
+  const map = L.map('conflictMap', {
+    center: [25, 52],
+    zoom: 4,
+    zoomControl: true,
+    attributionControl: true
+  });
+
+  // Dark CartoDB tiles
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap contributors © CARTO',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(map);
+
+  // ---- Helper: pulsing circle marker ----
+  function pulseMarker(latlng, color, radius) {
+    return L.circleMarker(latlng, {
+      radius: radius,
+      fillColor: color,
+      color: color,
+      weight: 2,
+      opacity: 0.9,
+      fillOpacity: 0.35
+    });
+  }
+
+  // ---- IMPACT HEATMAP — country-level filled circles ----
+  const countryImpact = [
+    // [lat, lng, radius, color, opacity, name, impact]
+    [32.4, 53.7,  80, '#f85149', 0.45, 'Iran',          '🔴 Active War Zone — US-Israeli strikes ongoing. Leadership decapitated. IRGC retaliating.'],
+    [24.0, 45.0,  65, '#f85149', 0.30, 'Saudi Arabia',  '🔴 Ras Tanura terminal offline. Drone/missile attacks ongoing. Oil exports suspended.'],
+    [25.3, 51.2,  45, '#f85149', 0.35, 'Qatar',         '🔴 LNG Force Majeure declared. 20% of global LNG offline. Airspace restricted.'],
+    [23.4, 53.8,  45, '#f0883e', 0.30, 'UAE',           '🟠 Dubai airspace closed. Air freight +400%. AWS datacenter hit. Major shipping hub disrupted.'],
+    [29.3, 47.5,  35, '#f0883e', 0.25, 'Kuwait',        '🟠 US base targeted. Oil exports suspended via Hormuz. Shipping halted.'],
+    [33.2, 43.7,  50, '#f0883e', 0.25, 'Iraq',          '🟠 US bases attacked. Oil exports (~4M bbl/day) suspended via Hormuz. Political instability.'],
+    [30.5, 36.5,  40, '#d29922', 0.25, 'Jordan',        '🟡 US military bases on alert. Airspace restrictions. Tourist economy hit.'],
+    [31.5, 34.8,  35, '#f0883e', 0.25, 'Israel',        '🟠 Military aggressor. Missile attacks received. Iron Dome activated. Economy disrupted.'],
+    // Asia — heavy losers
+    [37.5, 127.0, 60, '#f85149', 0.28, 'South Korea',   '🔴 KOSPI −12% (circuit breaker triggered). Major oil importer. Auto/electronics supply chain hit.'],
+    [36.2, 138.0, 65, '#f0883e', 0.25, 'Japan',         '🔴 ~90% energy imported. LNG from Qatar disrupted. GDP contraction risk.'],
+    [20.5, 79.0,  80, '#f0883e', 0.20, 'India',         '🟠 Major oil importer. Pharma exports disrupted (air freight). Gold price volatility.'],
+    [30.0, 105.0, 100,'#d29922', 0.18, 'China',         '🟡 30%+ oil from Gulf. Manufacturing cost surge. Watches geopolitical balance carefully.'],
+    [30.5, 69.0,  50, '#f85149', 0.35, 'Pakistan',      '🔴 CRITICAL — 40% energy imported, 100% LNG from Qatar. Near existential energy crisis.'],
+    [23.7, 90.4,  40, '#d29922', 0.20, 'Bangladesh',    '🟡 LNG dependent. Energy inflation hitting garment exports and domestic prices.'],
+    [7.9,  80.7,  30, '#d29922', 0.20, 'Sri Lanka',     '🟡 Oil import costs surging. Fragile post-2022 recovery at risk.'],
+    // Europe
+    [51.0, 10.0,  90, '#d29922', 0.18, 'Europe',        '🟡 Gas prices +20%. ECB stagflation bind. Southern Europe (Italy, Spain, Greece) most exposed.'],
+    [52.2, 21.0,  40, '#f0883e', 0.22, 'Poland/Baltics','🟠 Gas import dependency re-emerges. NATO alert level raised.'],
+    // Africa / SE Asia
+    [-1.0, 36.8,  50, '#d29922', 0.18, 'East Africa',   '🟡 Oil import price shock. Fertilizer shortages threaten food security in Kenya, Ethiopia.'],
+    [-14.0,25.0,  60, '#d29922', 0.15, 'Sub-Saharan Africa','🟡 Fuel costs surge. Food inflation from fertilizer disruption.'],
+    [13.5, 2.1,   55, '#f0883e', 0.20, 'West Africa (Oil Importers)','🟠 Landlocked importers facing acute fuel shortages and price spikes.'],
+    [13.5, 104.0, 45, '#d29922', 0.18, 'SE Asia (Thailand/Vietnam)','🟡 Thai SET −8%. Energy cost surge hits manufacturing export competitiveness.'],
+    // Winners (green)
+    [64.0, 15.0,  55, '#3fb950', 0.28, 'Norway',        '🟢 WINNER — North Sea oil/gas exports at windfall prices. Sovereign fund boost. $100+ oil.'],
+    [60.0, 55.0,  90, '#3fb950', 0.22, 'Russia',        '🟢 WINNER — Oil at $100+ fills war chest despite sanctions. Geopolitical leverage.'],
+    [58.0,-96.0,  80, '#3fb950', 0.22, 'Canada',        '🟢 WINNER — Oil sands profitable at $60+, printing at $85+. LNG Canada gains urgency.'],
+    [37.0,-97.0, 100, '#d29922', 0.15, 'United States', '🟡 MIXED — Shale wins from $100 oil. But $3.45/gal gas = political liability. Midterm risk.'],
+    [-14.0,-51.0, 70, '#3fb950', 0.20, 'Brazil',        '🟢 WINNER — Petrobras pre-salt oil at windfall margin. LNG/oil export premium.'],
+    // Middle East stable
+    [33.9, 35.5,  35, '#d29922', 0.22, 'Lebanon',       '🟡 Regional spillover risk. Economy already in crisis. Hezbollah supply chain disrupted.'],
+    [15.6, 32.5,  40, '#d29922', 0.18, 'Sudan/Horn',    '🟡 Bab el-Mandeb proximity. Food import cost surge.'],
+  ];
+
+  countryImpact.forEach(([lat, lng, r, color, op, name, desc]) => {
+    const circle = L.circle([lat, lng], {
+      radius: r * 15000,
+      fillColor: color,
+      color: color,
+      weight: 1,
+      opacity: 0.6,
+      fillOpacity: op
+    }).addTo(map);
+    circle.bindPopup(`<b>${name}</b><br>${desc}`);
+  });
+
+  // ---- SHIPPING ROUTES ----
+  const routeStyle = { color: '#58a6ff', weight: 2, opacity: 0.5, dashArray: '8,6' };
+  const blockedStyle = { color: '#f85149', weight: 3, opacity: 0.8, dashArray: '6,4' };
+  const altRouteStyle = { color: '#f0883e', weight: 2, opacity: 0.6, dashArray: '4,8' };
+
+  // Blocked: Persian Gulf → Hormuz → Indian Ocean (BLOCKED)
+  const gulfToHormuz = L.polyline([
+    [26.5, 50.0], [26.5, 54.0], [24.5, 57.5], [22.5, 59.0]
+  ], blockedStyle).addTo(map);
+  gulfToHormuz.bindPopup('<b>🚫 Strait of Hormuz Route — BLOCKED</b><br>20M bbl/day cannot pass. ~200 tankers stranded in Persian Gulf. Iran-controlled waters.');
+
+  // Blocked: Hormuz to Indian Ocean
+  const hormuzToOcean = L.polyline([
+    [24.5, 57.5], [20.0, 62.0], [12.5, 62.0]
+  ], blockedStyle).addTo(map);
+
+  // Normal: Indian Ocean to Suez
+  const oceanToSuez = L.polyline([
+    [12.5, 44.0], [15.0, 42.5], [20.0, 38.0], [27.0, 33.8], [30.5, 32.5]
+  ], {...routeStyle, color: '#d29922'}).addTo(map);
+  oceanToSuez.bindPopup('<b>⚠️ Red Sea / Suez Route</b><br>Bab el-Mandeb under watch. Suez canal monitoring conflict spread risk. Currently open but at risk.');
+
+  // Alternative: Cape of Good Hope route
+  const capeRoute = L.polyline([
+    [22.5, 59.0], [10.0, 58.0], [-5.0, 52.0], [-20.0, 38.0], [-35.0, 20.0], [-34.0, 18.4], [-20.0, 5.0], [0.0, -5.0], [15.0, -20.0], [35.0, -10.0], [51.5, 0.0]
+  ], altRouteStyle).addTo(map);
+  capeRoute.bindPopup('<b>🔄 Alternative: Cape of Good Hope</b><br>+18–25 days extra transit. Tankers rerouting now. Freight costs surging. Main bypass for Hormuz-blocked cargo.');
+
+  // Asia route: Indian Ocean to China/Korea/Japan
+  const asiaRoute = L.polyline([
+    [12.5, 62.0], [5.0, 72.0], [1.3, 104.0], [10.0, 112.0], [22.0, 120.0], [37.5, 122.0]
+  ], routeStyle).addTo(map);
+  asiaRoute.bindPopup('<b>Asia Supply Route</b><br>China, Korea, Japan oil imports from Gulf now blocked at source. Asia-bound tankers stranded or rerouting via Cape.');
+
+  // ---- KEY SITE MARKERS ----
+  function createIcon(emoji, bgColor) {
+    return L.divIcon({
+      html: `<div style="background:${bgColor};border:2px solid rgba(255,255,255,0.4);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 0 12px ${bgColor}88;">${emoji}</div>`,
+      className: '',
+      iconSize: [32, 32],
+      iconAnchor: [16, 16]
+    });
+  }
+
+  function pulseIcon(emoji, bgColor) {
+    return L.divIcon({
+      html: `<div style="position:relative;">
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.6);width:36px;height:36px;border-radius:50%;background:${bgColor};opacity:0.5;animation:pulse-ring 1.6s cubic-bezier(0.215,0.61,0.355,1) infinite;"></div>
+        <div style="background:${bgColor};border:2px solid rgba(255,255,255,0.5);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 0 16px ${bgColor}cc;position:relative;z-index:1;">${emoji}</div>
+      </div>`,
+      className: '',
+      iconSize: [34, 34],
+      iconAnchor: [17, 17]
+    });
+  }
+
+  // Conflict zones (pulsing)
+  L.marker([35.7, 51.4], { icon: pulseIcon('💥', '#f85149') }).addTo(map)
+    .bindPopup('<b>💥 Tehran, Iran — Strike Target</b><br>Supreme Leader Khamenei assassinated Feb 28. Operation Epic Fury. IRGC headquarters destroyed. Active retaliation ongoing.');
+
+  L.marker([32.1, 48.7], { icon: pulseIcon('💥', '#f85149') }).addTo(map)
+    .bindPopup('<b>💥 Khuzestan Province — Iranian Oil Fields</b><br>Major oil-producing region targeted. Partial damage to Ahvaz refinery complex.');
+
+  L.marker([31.9, 35.2], { icon: pulseIcon('🛡️', '#58a6ff') }).addTo(map)
+    .bindPopup('<b>🛡️ Israel — Operation Originator</b><br>Joint US-Israel strikes on Iran. Iron Dome activated. Missile impacts in Tel Aviv and Haifa areas. Retaliatory drone strikes repelled.');
+
+  // Chokepoints (pulsing critical)
+  L.marker([26.5, 56.5], { icon: pulseIcon('🚫', '#f85149') }).addTo(map)
+    .bindPopup('<b>🚫 STRAIT OF HORMUZ — BLOCKED</b><br><b>Status: Effectively Closed</b><br>20M barrels/day + 20% global LNG blocked.<br>~200 tankers stranded in Persian Gulf.<br>Iran mining operations reported.<br>US Navy attempting escort — contested.');
+
+  L.marker([12.6, 43.3], { icon: createIcon('⚠️', '#d29922') }).addTo(map)
+    .bindPopup('<b>⚠️ Bab el-Mandeb Strait — AT RISK</b><br>4.8M bbl/day normally flows here.<br>Houthi activity re-escalating in solidarity with Iran.<br>US Navy increased presence. Currently open but watched.');
+
+  L.marker([30.5, 32.3], { icon: createIcon('👁️', '#d29922') }).addTo(map)
+    .bindPopup('<b>👁️ Suez Canal — WATCH</b><br>~12% of global trade transits here.<br>Egypt maintaining neutrality but under pressure.<br>Traffic displaced from Hormuz blockage testing capacity.');
+
+  L.marker([1.2, 103.8], { icon: createIcon('🟢', '#3fb950') }).addTo(map)
+    .bindPopup('<b>✅ Strait of Malacca — OPEN</b><br>15M bbl/day. No direct conflict impact.<br>Increased traffic from rerouted Asia-bound cargo.<br>Singapore benefiting as alternative logistics hub.');
+
+  // Infrastructure sites
+  L.marker([26.7, 50.1], { icon: pulseIcon('🏭', '#f85149') }).addTo(map)
+    .bindPopup('<b>🏭 Ras Tanura — OFFLINE</b><br>Saudi Aramco\'s largest crude export terminal.<br><b>Status: Offline after drone attacks</b><br>Damage assessment ongoing. No timeline for restart.<br>~7M bbl/day capacity offline.');
+
+  L.marker([25.5, 51.2], { icon: pulseIcon('🔥', '#f85149') }).addTo(map)
+    .bindPopup('<b>🔥 Qatar LNG — Force Majeure</b><br>World\'s largest LNG exporter.<br><b>Status: Force Majeure declared</b><br>20% of global LNG offline.<br>Qatar supplies Europe, Japan, South Korea, Pakistan.<br>Est. 1+ month to normalize production.');
+
+  L.marker([25.2, 55.4], { icon: createIcon('✈️', '#f0883e') }).addTo(map)
+    .bindPopup('<b>✈️ Dubai Airspace — RESTRICTED</b><br>World\'s busiest international airport by passenger traffic.<br><b>Status: Severely restricted</b><br>Air freight costs +400% in 48 hours.<br>Gold shipments to India disrupted.<br>Indian pharma export route broken.');
+
+  L.marker([24.5, 54.4], { icon: createIcon('⚓', '#f0883e') }).addTo(map)
+    .bindPopup('<b>⚓ UAE IPCO Pipeline — LIMITED</b><br>Partial bypass for Hormuz — capacity 1.5M bbl/day.<br>Insufficient vs 20M bbl/day blocked.<br>Running at maximum capacity.');
+
+  // US Military assets
+  L.marker([26.2, 50.6], { icon: createIcon('🇺🇸', '#58a6ff') }).addTo(map)
+    .bindPopup('<b>🇺🇸 US 5th Fleet HQ — Manama, Bahrain</b><br>Central Command naval hub for Gulf operations.<br>Heightened security. F/A-18 sorties launched from USS carriers.');
+
+  L.marker([25.2, 55.36], { icon: createIcon('🇺🇸', '#58a6ff') }).addTo(map)
+    .bindPopup('<b>🇺🇸 Al Dhafra Air Base — UAE</b><br>Key US air base in the Gulf.<br>B-2 Spirit stealth bombers operating from this area for strikes.');
+
+  L.marker([29.5, 47.9], { icon: createIcon('🇺🇸', '#58a6ff') }).addTo(map)
+    .bindPopup('<b>🇺🇸 Ali Al Salem Air Base — Kuwait</b><br>Attacked by Iranian ballistic missiles Feb 28–Mar 1.<br>US forces defended, infrastructure partially damaged.');
+
+  // Tankers stranded
+  L.marker([26.0, 53.5], { icon: createIcon('🛢️', '#8b949e') }).addTo(map)
+    .bindPopup('<b>🛢️ ~200 Tankers Stranded</b><br>Persian Gulf holding area.<br>~140M barrels of oil unable to pass Hormuz.<br>Insurance rates: uninsurable at standard Lloyd\'s pricing.<br>War risk premiums at record levels.');
+
+  // ---- LEGEND ----
+  const legend = L.control({ position: 'bottomleft' });
+  legend.onAdd = function() {
+    const div = L.DomUtil.create('div', 'map-legend');
+    div.innerHTML = `
+      <h4>LEGEND</h4>
+      <div class="leg-row"><div class="leg-dot" style="background:#f85149"></div> Active War / Blocked / Offline</div>
+      <div class="leg-row"><div class="leg-dot" style="background:#f0883e"></div> Severely Disrupted</div>
+      <div class="leg-row"><div class="leg-dot" style="background:#d29922"></div> At Risk / Moderate Impact</div>
+      <div class="leg-row"><div class="leg-dot" style="background:#3fb950"></div> Beneficiary (Windfall)</div>
+      <div class="leg-row"><div class="leg-line" style="background:#f85149"></div> Blocked Shipping Route</div>
+      <div class="leg-row"><div class="leg-line" style="background:#f0883e;opacity:0.6"></div> Alternative Cape Route</div>
+      <div class="leg-row"><div class="leg-line" style="background:#d29922;opacity:0.6"></div> At-Risk Route</div>
+    `;
+    return div;
+  };
+  legend.addTo(map);
+}
+
+// Initialize map when tab is clicked
+document.querySelector('.nav-tab:last-child').addEventListener('click', () => {
+  setTimeout(initMap, 100);
+});
+</script>
+</body>
+</html>
